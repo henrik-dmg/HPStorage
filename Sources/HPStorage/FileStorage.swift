@@ -7,7 +7,7 @@ import Foundation
 	private let assertOnErrors: Bool
 
 	public init(
-		fileName: String,
+		_ fileName: String,
 		directory: Directory = .caches(),
 		encoder: JSONEncoder = .init(),
 		decoder: JSONDecoder = .init(),
@@ -21,7 +21,7 @@ import Foundation
 	public var wrappedValue: C? {
 		get {
 			do {
-				return try utility.read(fileName: fileName)
+				return try utility.readValue(atFile: fileName)
 			} catch let error {
 				#if DEBUG
 				if assertOnErrors {
@@ -33,7 +33,7 @@ import Foundation
 		}
 		nonmutating set {
 			do {
-				try utility.write(newValue, fileName: fileName)
+				try utility.writeValue(newValue, fileName: fileName)
 			} catch let error {
 				#if DEBUG
 				if assertOnErrors {

@@ -1,19 +1,11 @@
 import XCTest
 @testable import HPStorage
 
-final class HPStorageTests: XCTestCase {
-
-	private let baseURl = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".HPStorage")
-	private var testFileURL: URL {
-		baseURl.appendingPathComponent("Tests/codable.json")
-	}
+final class FileManagerExtensionTests: BaseTestCase {
 
 	override func tearDownWithError() throws {
 		try super.tearDownWithError()
-
-		if FileManager.default.fileExists(atPath: baseURl.path) {
-			try FileManager.default.removeItem(at: baseURl)
-		}
+		try cleanUp()
 	}
 
 	func testWritingToFile() throws {
@@ -42,6 +34,12 @@ final class HPStorageTests: XCTestCase {
 	func testReadingNonExistentFile() throws {
 		XCTAssertThrowsError(try FileManager.default.readValue(at: testFileURL, decoder: .init()) as DebugCodableStruct)
 
+	}
+
+	func testRemoveAll() throws {
+		let value = DebugCodableStruct(value: 6)
+		try FileManager.default.writeValue(value, to: testFileURL, encoder: .init())
+		XCTAssertNoThrow(try FileManager.default.removeAllItems(at: baseURL))
 	}
 
 }
